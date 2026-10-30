@@ -51,3 +51,5 @@ jobs:
     uses: ./.github/workflows/build-package.yml
     with:
       package: ${{ matrix.package }}
+    secrets:
+      DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
