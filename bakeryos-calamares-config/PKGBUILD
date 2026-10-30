@@ -1,26 +1,22 @@
 # Maintainer: smtdfc <me.smtdfc@gmail.com>
 
-pkgname=bakeryos-plymouth-theme
-pkgver=1.1.1
+pkgname=bakeryos-calamares-config
+pkgver=1.2.0
 pkgrel=1
-pkgdesc="Plymouth boot theme for BakeryOS"
+pkgdesc="Calamares config for BakeryOS"
+url="https://github.com/bakeryos-project/bakeryos-calamares-config"
 arch=('any')
-url="https://github.com/bakeryos-project/bakeryos-plymouth-theme"
-license=('GPL-3.0-or-later')
-depends=(
-  'plymouth'
-)
+license=("GPL-3.0-or-later")
 source=(
-
+  "${pkgname}-${pkgver}.tar.gz::https://github.com/bakeryos-project/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz"
 )
-sha256sums=(
-
-)
-install=bakeryos-plymouth-theme.install
 options=(!debug !strip)
 
 package() {
-  install -d "${pkgdir}/usr/share/plymouth/themes"
-  cp -a "${srcdir}/bakeryos" "${pkgdir}/usr/share/plymouth/themes/"
-  install -Dm644 "${startdir}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    cd "$srcdir/${pkgname}-${pkgver}"
+    install -d "${pkgdir}/etc"
+    cp -r etc/* "${pkgdir}/etc/"
+
+    install -Dm644 "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
+sha256sums=('b41ef35e7a3ff8fce58b7671f6b0d315f89030b820c515e7861468a843faa0ad')
