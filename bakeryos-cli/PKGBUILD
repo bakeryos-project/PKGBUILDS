@@ -1,0 +1,27 @@
+# Maintainer: smtdfc <me.smtdfc@gmail.com>
+
+pkgname=bakeryos-cli
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="CLI for BakeryOS"
+arch=('x86_64')
+url="https://github.com/bakeryos-project/bakeryos-cli"
+license=('GPL-3.0-or-later')
+depends=('gcc-libs' 'glibc' 'pacman')
+makedepends=('cargo' 'git')
+source=(
+  "${pkgname}-${pkgver}.tar.gz::https://github.com/bakeryos-project/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz"
+)
+sha256sums=('fa26ce7bb1b69f02e65135f553b4b4f982c81b3fd4a78685cba9ee8a5abdadf2')
+options=(!debug !strip)
+
+build(){
+   cd "$srcdir/${pkgname}-${pkgver}"
+   CFLAGS="" cargo build --release
+}
+
+package() {
+   cd "$srcdir/${pkgname}-${pkgver}"
+   install -Dm755 "target/release/bakeryos-cli" "$pkgdir/usr/bin/bakeryos"
+   install -Dm644 "LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

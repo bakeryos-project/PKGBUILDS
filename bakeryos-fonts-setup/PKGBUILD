@@ -1,0 +1,36 @@
+# Maintainer: smtdfc <me.smtdfc@gmail.com>
+
+pkgname=bakeryos-fonts-setup
+pkgver=1.1.2
+pkgrel=1
+pkgdesc="A font setup script for BakeryOS"
+arch=('any')
+url="https://github.com/bakeryos-project/bakeryos-fonts-setup"
+license=('GPL-3.0-or-later')
+depends=(
+  'fontconfig'
+  'freetype2'
+  'ttf-dejavu'
+  'ttf-liberation'
+  'noto-fonts'
+  'noto-fonts-emoji'
+  'noto-fonts-cjk'
+  'adobe-source-han-sans-otc-fonts'
+  'adobe-source-han-serif-otc-fonts'
+  'ttf-roboto'
+  'ttf-roboto-mono'
+  'ttf-ubuntu-font-family'
+  'ttf-fira-code'
+  'ttf-fira-sans'
+  'ttf-fira-mono'
+)
+source=(
+  "${pkgname}-${pkgver}.tar.gz::https://github.com/bakeryos-project/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz"
+)
+options=(!debug !strip)
+
+package() {
+  cd "$srcdir/${pkgname}-${pkgver}"
+  install -Dm644 "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+sha256sums=('e52b9dca497b2c477a2e73942d68fe28924dc869094d5d8e83110e2b17da28e1')

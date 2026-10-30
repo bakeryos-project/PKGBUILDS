@@ -1,0 +1,30 @@
+# Maintainer: smtdfc <me.smtdfc@gmail.com>
+
+_extension_name="bakeryos@bakeryos.smtdfc.net"
+pkgname=bakeryos-gnome-extension
+pkgver=1.2.0
+pkgrel=1
+pkgdesc="An extension for BakeryOS"
+arch=('x86_64')
+url="https://github.com/bakeryos-project/bakeryos-gnome-extension"
+license=('GPL-3.0-or-later')
+depends=('gcc-libs' 'glibc' 'pacman')
+arch=('any')
+source=(
+  "${pkgname}-${pkgver}.tar.gz::https://github.com/bakeryos-project/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz"
+)
+options=(!debug !strip)
+makedepends=('pnpm' 'nodejs' 'make' 'zip' 'unzip')
+
+build() {
+    cd "$srcdir/${pkgname}-${pkgver}"
+    make pack
+}
+
+package() {
+   cd "$srcdir/${pkgname}-${pkgver}"
+   install -d "$pkgdir/usr/share/gnome-shell/extensions/$_extension_name"
+   cp -r "dist/"* "$pkgdir/usr/share/gnome-shell/extensions/$_extension_name"
+   install -Dm644 "LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+sha256sums=('7b215dde1ebb676f4656c77b4ce98618de577d2df0d7058d20c407192bbc6e01')

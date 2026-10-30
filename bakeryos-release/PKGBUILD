@@ -1,0 +1,29 @@
+# Maintainer: smtdfc <me.smtdfc@gmail.com>
+
+pkgname=bakeryos-release
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="Release identity and system identification files for BakeryOS"
+arch=('any')
+url="https://github.com/bakeryos-project/bakeryos-release"
+license=('GPL-3.0-or-later')
+depends=(
+  'plymouth'
+)
+source=(
+  "${pkgname}-${pkgver}.tar.gz::https://github.com/bakeryos-project/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz"
+)
+
+provides=('lsb-release')
+conflicts=('lsb-release')
+replaces=('lsb-release')
+
+options=(!debug !strip)
+
+package() {
+  cd "$srcdir/${pkgname}-${pkgver}"
+  install -Dm644 src/os-release "$pkgdir/usr/lib/os-release"
+  install -Dm644 "src/lsb-release" "${pkgdir}/etc/lsb-release"
+  install -Dm644 "src/issue" "${pkgdir}/etc/issue.d/bakeryos.issue"
+}
+sha256sums=('d2ff144f37d12680b2ff15f5f6fad34048f4be883cd364ebb150cf68c4ae0f91')

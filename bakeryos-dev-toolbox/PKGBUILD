@@ -1,0 +1,37 @@
+# Maintainer: smtdfc <me.smtdfc@gmail.com>
+
+pkgname=bakeryos-dev-toolbox
+pkgver=1.2.0
+pkgrel=1
+pkgdesc="A post-installation setup wizard and developer environment installer for BakeryOS."
+arch=('x86_64')
+url="https://github.com/bakeryos-project/bakeryos-dev-toolbox"
+license=('GPL-3.0-or-later')
+depends=('gtk4' 'libadwaita' 'glib2' 'zenity' 'nodejs' 'npm')
+makedepends=('base-devel' 'meson' 'rust' 'cargo' 'blueprint-compiler' 'clang' 'lld' 'gcc')
+source=(
+  "${pkgname}-${pkgver}.tar.gz::https://github.com/bakeryos-project/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz"
+)
+options=(!debug !strip)
+
+build() {
+    cd "$srcdir/${pkgname}-${pkgver}"
+
+    export CFLAGS=""
+    export CXXFLAGS=""
+    export LDFLAGS=""
+    export RUSTFLAGS=""
+
+    arch-meson . build
+    meson compile -C build
+}
+
+package() {
+    cd "$srcdir/${pkgname}-${pkgver}"
+
+    install -d "${pkgdir}/usr/local/bin"
+    cp -a src/scripts/* ${pkgdir}/usr/local/bin
+    meson install -C build --no-rebuild --destdir "$pkgdir"
+    install -Dm644 "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+sha256sums=('eeba22e1dda10617c8746ad938a7059a9c66691bb97ecefb72b84b2697bdf525')

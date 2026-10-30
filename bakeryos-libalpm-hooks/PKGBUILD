@@ -1,0 +1,23 @@
+# Maintainer: smtdfc <me.smdtfc@gmail.com>
+
+pkgname=bakeryos-libalpm-hooks
+pkgver=1.1.0
+pkgrel=1
+pkgdesc="Custom libalpm hooks for BakeryOS"
+url="https://github.com/bakeryos-project/bakeryos-libalpm-hooks"
+arch=('any')
+options=(!debug !strip)
+license=("GPL-3.0-or-later")
+depends=('pacman' 'libnotify')
+source=(
+  "${pkgname}-${pkgver}.tar.gz::https://github.com/bakeryos-project/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz"
+)
+
+
+package() {
+    cd "$srcdir/${pkgname}-${pkgver}"
+    install -Dm644 "src/bakeryos-reboot-required.hook" "$pkgdir/usr/share/libalpm/hooks/bakeryos-reboot-required.hook"
+    install -Dm755 "src/bakeryos-reboot-notify.sh"  "$pkgdir/usr/bin/bakeryos-reboot-notify"
+    install -Dm644 "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+sha256sums=('6f661284eb387633952327561ed871e8ec85463d6e6d69ca164d187728dc5ba4')

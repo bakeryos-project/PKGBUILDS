@@ -1,0 +1,35 @@
+# Maintainer: smtdfc <me.smtdfc@gmail.com>
+
+pkgname=bakeryos-wallpapers
+pkgver=1.2.0
+pkgrel=1
+pkgdesc="Wallpapers for BakeryOS"
+arch=('any')
+url="https://github.com/bakeryos-project/bakeryos-wallpapers"
+license=('GPL-3.0-or-later')
+depends=(
+  'plymouth'
+)
+source=(
+  "${pkgname}-${pkgver}.tar.gz::https://github.com/bakeryos-project/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz"
+)
+
+options=(!debug !strip)
+
+package() {
+  cd "$srcdir/${pkgname}-${pkgver}"
+  install -d "${pkgdir}/usr/share/doc/bakeryos/wallpapers"
+  install -d "${pkgdir}/usr/share/gnome-background-properties"
+  install -d "${pkgdir}/usr/share/backgrounds/bakeryos-wallpapers"
+
+  install -Dm644 "src/CREDIT.md" "${pkgdir}/usr/share/doc/bakeryos/wallpapers/CREDIT.md"
+  install -Dm644 "src/gnome-background-properties/bakeryos.xml" "${pkgdir}/usr/share/gnome-background-properties/bakeryos.xml"
+  for img in "src/bakeryos-wallpapers/"*; do
+    if [ -f "$img" ]; then
+      install -Dm644 "$img" "${pkgdir}/usr/share/backgrounds/bakeryos-wallpapers/$(basename "$img")"
+    fi
+  done
+
+  install -Dm644 "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+sha256sums=('29134e5ce498411c10ab98c026df2633edbb5fe77e908a0049dbc45029569aa3')

@@ -1,0 +1,23 @@
+# Maintainer: smtdfc <me.smdtfc@gmail.com>
+
+pkgname=bakeryos-keyring
+pkgver=1.0.3
+pkgrel=1
+pkgdesc="BakeryOS keyring"
+url="https://github.com/bakeryos-project/bakeryos-keyring"
+arch=('any')
+options=(!debug !strip)
+license=('GPL-3.0-or-later')
+install="${pkgname}.install"
+source=(
+  "${pkgname}-${pkgver}.tar.gz::https://github.com/bakeryos-project/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz"
+)
+
+package() {
+    cd "$srcdir/${pkgname}-${pkgver}"
+    install -D -m0644 -t "${pkgdir}/usr/share/pacman/keyrings/" \
+        "src/bakeryos.gpg" \
+        "src/bakeryos-trusted" \
+        "src/bakeryos-revoked"
+}
+sha256sums=('77dddf51a72b9b5646bfcea82dac50db7dab1c3c93c9b5c9238ddfe803a54913')

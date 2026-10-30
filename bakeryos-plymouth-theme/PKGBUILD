@@ -1,0 +1,26 @@
+# Maintainer: smtdfc <me.smtdfc@gmail.com>
+
+pkgname=bakeryos-plymouth-theme
+pkgver=1.2.0
+pkgrel=1
+pkgdesc="Plymouth boot theme for BakeryOS"
+arch=('any')
+url="https://github.com/bakeryos-project/bakeryos-plymouth-theme"
+license=('GPL-3.0-or-later')
+depends=(
+  'plymouth'
+)
+source=(
+  "${pkgname}-${pkgver}.tar.gz::https://github.com/bakeryos-project/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz"
+)
+
+install=bakeryos-plymouth-theme.install
+options=(!debug !strip)
+
+package() {
+  cd "$srcdir/${pkgname}-${pkgver}"
+  install -d "${pkgdir}/usr/share/plymouth/themes"
+  cp -a "src/bakeryos" "${pkgdir}/usr/share/plymouth/themes/"
+  install -Dm644 "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+sha256sums=('5535930f9a83204f38e3b29f415500e0dc21fbb285541f37390b74ed45784fae')
