@@ -1,0 +1,97 @@
+name: Build Package
+
+on:
+  workflow_call:
+    inputs:
+      package:
+        required: true
+        type: string
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    container:
+      image: archlinux:latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch secrets
+        uses: dopplerhq/secrets-fetch-action@v2.0.0
+        with:
+          doppler-token: ${{ secrets.DOPPLER_TOKEN }}
+          inject-env-vars: true
+
+      - name: Install dependencies
+        run: |
+          pacman -Syu --noconfirm \
+            base-devel \
+            gnupg \
+            git \
+            rclone \
+            meson \
+            ninja \
+            gtk4 \
+            rust \
+            cargo \
+            sudo
+
+      - name: Setup builder
+        run: |
+          useradd -m builder
+          printf 'builder ALL=(ALL) NOPASSWD: ALL\n' >> /etc/sudoers
+          chown -R builder:builder .
+
+      - name: Build package
+        run: |
+          cd "${{ inputs.package }}"
+          sudo -u builder makepkg \
+            -s \
+            --noconfirm \
+            --skippgpcheck
+
+      - name: Import GPG key
+        run: |
+          echo "$GPG_PRIVATE_KEY" | base64 -d > private.key
+          gpg --import --batch private.key
+          rm -f private.key
+
+      - name: Sign package
+        run: |
+          find "${{ inputs.package }}" \
+            -maxdepth 1 \
+            -name "*.pkg.tar.zst" \
+            ! -name "*.sig" \
+            -print0 |
+          while IFS= read -r -d '' pkg; do
+            printf '%s' "$GPG_PASSPHRASE" | gpg \
+              --batch \
+              --yes \
+              --pinentry-mode loopback \
+              --passphrase-fd 0 \
+              --local-user "$GPG_FINGERPRINT" \
+              --detach-sign "$pkg"
+          done
+
+      - name: Configure Rclone
+        run: |
+          mkdir -p ~/.config/rclone
+
+          cat <<EOF > ~/.config/rclone/rclone.conf
+          [r2]
+          type = s3
+          provider = Cloudflare
+          access_key_id = $R2_ACCESS_KEY
+          secret_access_key = $R2_SECRET_KEY
+          endpoint = $R2_ENDPOINT
+          no_check_bucket=true
+          EOF
+
+      - name: Sync to R2
+        run: |
+          rclone copy "${{ inputs.package }}" \
+            "r2:$R2_BUCKET/x86_64" \
+            --include "*.pkg.tar.zst" \
+            --include "*.pkg.tar.zst.sig" \
+            --progress \
+            --s3-no-check-bucket

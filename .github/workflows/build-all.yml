@@ -1,0 +1,53 @@
+name: Build and Sync CI
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_all:
+        description: Build all packages
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    outputs:
+      packages: ${{ steps.detect.outputs.packages }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch secrets
+        uses: dopplerhq/secrets-fetch-action@v2.0.0
+        with:
+          doppler-token: ${{ secrets.DOPPLER_TOKEN }}
+          inject-env-vars: true
+
+      - name: Detect packages
+        id: detect
+        shell: bash
+        run: |
+          packages=$(find . -mindepth 2 -maxdepth 2 \
+            -name PKGBUILD \
+            -printf '%h\n' |
+            sed 's|^\./||' |
+            jq -R . |
+            jq -sc .)
+
+          echo "packages=$packages" >> "$GITHUB_OUTPUT"
+          echo "Detected: $packages"
+
+  build:
+    needs: detect
+    if: needs.detect.outputs.packages != '[]'
+
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        package: ${{ fromJson(needs.detect.outputs.packages) }}
+
+    uses: ./.github/workflows/build-package.yml
+    with:
+      package: ${{ matrix.package }}
