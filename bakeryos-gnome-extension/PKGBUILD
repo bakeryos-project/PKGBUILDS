@@ -2,7 +2,7 @@
 
 _extension_name="bakeryos@bakeryos.smtdfc.net"
 pkgname=bakeryos-gnome-extension
-pkgver=1.2.0
+pkgver=1.2.1
 pkgrel=1
 pkgdesc="An extension for BakeryOS"
 arch=('x86_64')
@@ -27,4 +27,4 @@ package() {
    cp -r "dist/"* "$pkgdir/usr/share/gnome-shell/extensions/$_extension_name"
    install -Dm644 "LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
-sha256sums=('7b215dde1ebb676f4656c77b4ce98618de577d2df0d7058d20c407192bbc6e01')
+sha256sums=('9392b37af4de1f23501d3f8a16a47c52232ea60d4832b2f122f1e6ae396ae9e1')
