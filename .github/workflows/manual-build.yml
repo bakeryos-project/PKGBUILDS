@@ -1,0 +1,48 @@
+name: Manual Build Package
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: Package directory to build
+        required: true
+        type: string
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    outputs:
+      package: ${{ steps.validate.outputs.package }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate package
+        id: validate
+        shell: bash
+        env:
+          PACKAGE: ${{ inputs.package }}
+        run: |
+          set -euo pipefail
+
+          if [[ ! "$PACKAGE" =~ ^[a-zA-Z0-9._+-]+$ ]]; then
+            echo "::error::Invalid package name"
+            exit 1
+          fi
+
+          if [[ ! -f "$PACKAGE/PKGBUILD" ]]; then
+            echo "::error::Package '$PACKAGE' does not exist or has no PKGBUILD"
+            exit 1
+          fi
+
+          echo "package=$PACKAGE" >> "$GITHUB_OUTPUT"
+          echo "Validated package: $PACKAGE"
+
+  build:
+    needs: validate
+
+    uses: ./.github/workflows/build-package.yml
+    with:
+      package: ${{ needs.validate.outputs.package }}
+    secrets:
+      DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
