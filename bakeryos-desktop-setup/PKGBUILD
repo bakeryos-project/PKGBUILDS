@@ -1,7 +1,7 @@
 # Maintainer: smtdfc <me.smtdfc@gmail.com>
 
 pkgname=bakeryos-desktop-setup
-pkgver=1.3.0
+pkgver=1.4.0
 pkgrel=1
 pkgdesc="Comprehensive desktop environment configuration package designed to provision a customized, highly productive, and visually polished user workspace with pre-configured settings, themes, and essential utilities."
 arch=('any')
@@ -10,7 +10,7 @@ license=("GPL-3.0-or-later")
 source=(
   "${pkgname}-${pkgver}.tar.gz::https://github.com/bakeryos-project/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz"
 )
-sha256sums=('97ccfb19604d531034e7b0ca7b5b2592c46cd8556fb99b3ba40ceee787223a06')
+sha256sums=('7edef1747be07b1282737b9d5d1436a9a1182806fff82c2494051d5a877fee0f')
 options=(!debug !strip)
 depends=('pacman')
 makedepends=('python' 'python-requests' 'unzip')
