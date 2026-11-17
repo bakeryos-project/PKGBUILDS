@@ -2,7 +2,7 @@
 
 pkgname=bakeryos-desktop-setup
 pkgver=1.4.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Comprehensive desktop environment configuration package designed to provision a customized, highly productive, and visually polished user workspace with pre-configured settings, themes, and essential utilities."
 arch=('any')
 url="https://github.com/bakeryos-project/bakeryos-desktop-setup"
@@ -12,7 +12,7 @@ source=(
 )
 sha256sums=('967ce9b0094996ed59aff3623a52a05347ff0cc83222a38063adcb237d9895ac')
 options=(!debug !strip)
-depends=('pacman')
+depends=('pacman' 'adw-gtk-theme')
 makedepends=('python' 'python-requests' 'unzip')
 conflicts=('bakeryos-desktop-setup')
 provides=('bakeryos-desktop-setup')
