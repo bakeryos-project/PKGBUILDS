@@ -1,0 +1,11 @@
+_apply_config() {
+  install -Dm644 /usr/share/bakeryos/plymouth/plymouthd.conf /etc/plymouth/plymouthd.conf
+}
+
+post_install() {
+  _apply_config
+}
+
+post_upgrade() {
+  _apply_config
+}

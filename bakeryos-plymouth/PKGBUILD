@@ -1,0 +1,29 @@
+# Maintainer: smtdfc <me.smtdfc@gmail.com>
+
+pkgname=bakeryos-plymouth
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="BakeryOS Plymouth configuration"
+arch=('any')
+url="https://github.com/bakeryos-project/bakeryos-plymouth"
+license=('GPL-3.0-or-later')
+depends=('plymouth')
+install="${pkgname}.install"
+options=(!debug !strip)
+source=(
+  "${pkgname}-${pkgver}.tar.gz::https://github.com/bakeryos-project/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz"
+)
+
+package() {
+  cd "$srcdir/${pkgname}-${pkgver}"
+
+  # /etc/plymouth/plymouthd.conf is owned by the plymouth package, so it cannot
+  # be shipped directly. Keep our copy outside /etc and let the install script
+  # write it after plymouth is installed/upgraded.
+  install -Dm644 "plymouth/plymouthd.conf" \
+    "$pkgdir/usr/share/bakeryos/plymouth/plymouthd.conf"
+
+  install -Dm644 "LICENSE" \
+    "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
+}
+sha256sums=('a05519f446a29fc65dbafda07349be41c337e3c5ff6af26657eef6570a1daead')
