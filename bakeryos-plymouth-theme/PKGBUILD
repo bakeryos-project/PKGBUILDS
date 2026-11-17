@@ -2,19 +2,18 @@
 
 pkgname=bakeryos-plymouth-theme
 pkgver=1.2.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Plymouth boot theme for BakeryOS"
 arch=('any')
 url="https://github.com/bakeryos-project/bakeryos-plymouth-theme"
 license=('GPL-3.0-or-later')
 depends=(
-  'plymouth'
+  'bakeryos-plymouth'
 )
 source=(
   "${pkgname}-${pkgver}.tar.gz::https://github.com/bakeryos-project/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz"
 )
 
-install=bakeryos-plymouth-theme.install
 options=(!debug !strip)
 
 package() {
