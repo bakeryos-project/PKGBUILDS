@@ -2,7 +2,7 @@
 
 pkgname=bakeryos-desktop-setup
 pkgver=1.6.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Comprehensive desktop environment configuration package designed to provision a customized, highly productive, and visually polished user workspace with pre-configured settings, themes, and essential utilities."
 arch=('any')
 url="https://github.com/bakeryos-project/bakeryos-desktop-setup"
@@ -12,11 +12,24 @@ source=(
 )
 sha256sums=('56a382e316adcff663a43845a072f1dabb13b129ed44c1cf693cb9fbdd2fb4cd')
 options=(!debug !strip)
-depends=('pacman' 'adw-gtk-theme' 'bakeryos-gnome-extension')
+depends=('pacman' 'adw-gtk-theme' 'bakeryos-gnome-extension' 'bakeryos-logo')
 makedepends=('python' 'python-requests' 'unzip')
-conflicts=('bakeryos-desktop-setup')
-provides=('bakeryos-desktop-setup')
-replaces=('bakeryos-desktop-setup')
+# These live in /etc: keep local edits instead of silently overwriting them.
+backup=(
+  'etc/dconf/profile/user'
+  'etc/dconf/profile/gdm'
+  'etc/dconf/db/gdm.d/00-bakeryos'
+  'etc/dconf/db/bakeryos.d/01-gnome-setup'
+  'etc/dconf/db/bakeryos.d/02-gnome-background'
+  'etc/dconf/db/bakeryos.d/03-dash-to-panel'
+  'etc/dconf/db/bakeryos.d/04-arc-menu'
+  'etc/dconf/db/bakeryos.d/05-gtk4-ding'
+  'etc/dconf/db/bakeryos.d/06-clipboard-history'
+  'etc/dconf/db/bakeryos.d/07-vitals'
+  'etc/dconf/db/bakeryos.d/08-console'
+  'etc/dconf/db/bakeryos.d/09-status-tray'
+  'etc/dconf/db/bakeryos.d/10-just-perfection'
+)
 
 build(){
     cd "$srcdir/${pkgname}-${pkgver}"
@@ -33,7 +46,7 @@ package() {
         fi
     done
 
-    local dconf_dir="${pkgdir}/etc/dconf/db/local.d"
+    local dconf_dir="${pkgdir}/etc/dconf/db/bakeryos.d"
     install -d "$dconf_dir"
 
     if [ -d "src/dconf" ]; then
@@ -43,6 +56,39 @@ package() {
             fi
         done
     fi
+
+    # Profile is packaging policy: it must name the db shipped above.
+    install -d "${pkgdir}/etc/dconf/profile"
+    cat > "${pkgdir}/etc/dconf/profile/user" <<'EOF'
+user-db:user
+system-db:local
+system-db:bakeryos
+EOF
+
+    # The greeter runs with DCONF_PROFILE=gdm and gdm no longer ships
+    # /etc/dconf/profile/gdm. Without this file dconf falls back to
+    # /usr/share/dconf/profile/gdm, which has no system-db, so neither gdm.d
+    # nor bakeryos.d is read by the login screen. Listing bakeryos here makes
+    # the greeter inherit the same wallpaper, accent, cursor and font as the
+    # session; gdm comes first so admin gdm.d files still win per key, and
+    # local stays ahead of bakeryos just like the user profile.
+    cat > "${pkgdir}/etc/dconf/profile/gdm" <<'EOF'
+user-db:user
+system-db:gdm
+system-db:local
+system-db:bakeryos
+file-db:/usr/share/gdm/greeter-dconf-defaults
+EOF
+
+    # Greeter-only keys. Kept out of bakeryos.d because only GDM reads them.
+    install -d "${pkgdir}/etc/dconf/db/gdm.d"
+    cat > "${pkgdir}/etc/dconf/db/gdm.d/00-bakeryos" <<'EOF'
+[org/gnome/login-screen]
+logo='/usr/share/bakeryos/logo/bakeryos-logo.png'
+EOF
+    chmod 644 "${pkgdir}/etc/dconf/profile/user" \
+               "${pkgdir}/etc/dconf/profile/gdm" \
+               "${pkgdir}/etc/dconf/db/gdm.d/00-bakeryos"
 
     install -Dm644 "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
