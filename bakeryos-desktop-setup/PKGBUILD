@@ -12,7 +12,7 @@ source=(
 )
 sha256sums=('56a382e316adcff663a43845a072f1dabb13b129ed44c1cf693cb9fbdd2fb4cd')
 options=(!debug !strip)
-depends=('pacman' 'adw-gtk-theme' 'bakeryos-gnome-extension' 'bakeryos-logo')
+depends=('pacman' 'adw-gtk-theme' 'bakeryos-gnome-extension')
 makedepends=('python' 'python-requests' 'unzip')
 # These live in /etc: keep local edits instead of silently overwriting them.
 backup=(
@@ -84,7 +84,7 @@ EOF
     install -d "${pkgdir}/etc/dconf/db/gdm.d"
     cat > "${pkgdir}/etc/dconf/db/gdm.d/00-bakeryos" <<'EOF'
 [org/gnome/login-screen]
-logo='/usr/share/bakeryos/logo/bakeryos-logo.png'
+logo=''
 EOF
     chmod 644 "${pkgdir}/etc/dconf/profile/user" \
                "${pkgdir}/etc/dconf/profile/gdm" \
