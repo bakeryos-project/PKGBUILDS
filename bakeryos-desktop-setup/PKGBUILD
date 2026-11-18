@@ -1,8 +1,8 @@
 # Maintainer: smtdfc <me.smtdfc@gmail.com>
 
 pkgname=bakeryos-desktop-setup
-pkgver=1.5.0
-pkgrel=3
+pkgver=1.6.0
+pkgrel=1
 pkgdesc="Comprehensive desktop environment configuration package designed to provision a customized, highly productive, and visually polished user workspace with pre-configured settings, themes, and essential utilities."
 arch=('any')
 url="https://github.com/bakeryos-project/bakeryos-desktop-setup"
@@ -10,7 +10,7 @@ license=("GPL-3.0-or-later")
 source=(
   "${pkgname}-${pkgver}.tar.gz::https://github.com/bakeryos-project/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz"
 )
-sha256sums=('077144a61bed7826f6174f4e82336d150a60aa6988d35c25477c11194b10ed4d')
+sha256sums=('56a382e316adcff663a43845a072f1dabb13b129ed44c1cf693cb9fbdd2fb4cd')
 options=(!debug !strip)
 depends=('pacman' 'adw-gtk-theme' 'bakeryos-gnome-extension')
 makedepends=('python' 'python-requests' 'unzip')
