@@ -2,12 +2,12 @@
 
 pkgname=bakeryos-shell-config
 pkgver=1.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Default shell environment for BakeryOS"
 arch=('any')
 url="https://github.com/bakeryos-project/bakeryos-shell-config"
 license=('GPL-3.0-or-later')
-depends=('zsh')
+depends=('zsh' 'bakeryos-oh-my-zsh' 'zsh-autosuggestions' 'zsh-syntax-highlighting')
 optdepends=('fastfetch: show system information when the shell starts')
 source=(
   "${pkgname}-${pkgver}.tar.gz::https://github.com/bakeryos-project/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz"
@@ -22,8 +22,6 @@ package() {
     install -d "$pkgdir/etc/skel"
     cp -a skel/. "$pkgdir/etc/skel/"
 
-    # /etc/skel/.bashrc thuộc gói bash — hai gói không được cùng sở hữu
-    # một path, nếu ship sẽ lỗi "exists in filesystem (owned by bash)".
     rm -f "$pkgdir/etc/skel/.bashrc"
 
     local dir
