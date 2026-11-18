@@ -1,8 +1,8 @@
 # Maintainer: smtdfc <me.smtdfc@gmail.com>
 
 pkgname=bakeryos-desktop-setup
-pkgver=1.6.0
-pkgrel=2
+pkgver=1.7.1
+pkgrel=1
 pkgdesc="Comprehensive desktop environment configuration package designed to provision a customized, highly productive, and visually polished user workspace with pre-configured settings, themes, and essential utilities."
 arch=('any')
 url="https://github.com/bakeryos-project/bakeryos-desktop-setup"
@@ -10,7 +10,7 @@ license=("GPL-3.0-or-later")
 source=(
   "${pkgname}-${pkgver}.tar.gz::https://github.com/bakeryos-project/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz"
 )
-sha256sums=('56a382e316adcff663a43845a072f1dabb13b129ed44c1cf693cb9fbdd2fb4cd')
+sha256sums=('3a3c95cc6497565449fe1c7a58ab926f3c5098876f8dd85376acd788b71ed4a9')
 options=(!debug !strip)
 depends=('pacman' 'adw-gtk-theme' 'bakeryos-gnome-extension')
 makedepends=('python' 'python-requests' 'unzip')
@@ -25,7 +25,6 @@ backup=(
   'etc/dconf/db/bakeryos.d/04-arc-menu'
   'etc/dconf/db/bakeryos.d/05-gtk4-ding'
   'etc/dconf/db/bakeryos.d/06-clipboard-history'
-  'etc/dconf/db/bakeryos.d/07-vitals'
   'etc/dconf/db/bakeryos.d/08-console'
   'etc/dconf/db/bakeryos.d/09-status-tray'
   'etc/dconf/db/bakeryos.d/10-just-perfection'
