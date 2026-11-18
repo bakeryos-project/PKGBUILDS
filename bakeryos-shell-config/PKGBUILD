@@ -1,0 +1,35 @@
+# Maintainer: smtdfc <me.smtdfc@gmail.com>
+
+pkgname=bakeryos-shell-config
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="Default shell environment for BakeryOS"
+arch=('any')
+url="https://github.com/bakeryos-project/bakeryos-shell-config"
+license=('GPL-3.0-or-later')
+depends=('zsh')
+optdepends=('fastfetch: show system information when the shell starts')
+source=(
+  "${pkgname}-${pkgver}.tar.gz::https://github.com/bakeryos-project/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz"
+)
+
+sha256sums=('f32d9d9c3806732260b80ef1477d6afbfc71a9e53f7ba739cf69fd2c0b95a1f7')
+options=(!debug !strip)
+
+package() {
+    cd "$srcdir/${pkgname}-${pkgver}"
+
+    install -d "$pkgdir/etc/skel"
+    cp -a skel/. "$pkgdir/etc/skel/"
+
+    # /etc/skel/.bashrc thuộc gói bash — hai gói không được cùng sở hữu
+    # một path, nếu ship sẽ lỗi "exists in filesystem (owned by bash)".
+    rm -f "$pkgdir/etc/skel/.bashrc"
+
+    local dir
+    for dir in Desktop Documents Downloads Music Pictures Public Templates Videos; do
+        install -d -m 0755 "$pkgdir/etc/skel/${dir}"
+    done
+
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
+}
