@@ -1,0 +1,27 @@
+# Maintainer: smtdfc <me.smtdfc@gmail.com>
+
+pkgname=bakeryos-fastfetch
+pkgver=1.1.0
+pkgrel=1
+pkgdesc="Fastfetch configuration and branding for BakeryOS"
+arch=('any')
+url="https://github.com/bakeryos-project/${pkgname}"
+license=('GPL-3.0-or-later')
+depends=('fastfetch')
+source=(
+  "${pkgname}-${pkgver}.tar.gz::https://github.com/bakeryos-project/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz"
+)
+
+sha256sums=('03746c7a0485260deac67756ebac2718f30ab0dd96eab88b7cb2660e34a1efa2')
+options=(!debug !strip)
+
+package() {
+    cd "$srcdir/${pkgname}-${pkgver}"
+
+    install -Dm644 src/config.jsonc \
+        "$pkgdir/usr/share/fastfetch/bakeryos.jsonc"
+    install -Dm644 src/logo.txt \
+        "$pkgdir/usr/share/fastfetch/logo.txt"
+    install -Dm644 LICENSE \
+        "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
+}
