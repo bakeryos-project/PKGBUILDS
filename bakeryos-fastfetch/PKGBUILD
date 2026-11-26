@@ -2,7 +2,7 @@
 
 pkgname=bakeryos-fastfetch
 pkgver=1.1.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Fastfetch configuration and branding for BakeryOS"
 arch=('any')
 url="https://github.com/bakeryos-project/${pkgname}"
@@ -22,6 +22,11 @@ package() {
         "$pkgdir/usr/share/fastfetch/bakeryos.jsonc"
     install -Dm644 src/logo.txt \
         "$pkgdir/usr/share/fastfetch/logo.txt"
+
+    install -d "$pkgdir/etc/skel/.config"
+    install -Dm644 src/config.jsonc \
+        "$pkgdir/etc/skel/.config/fastfetch/bakeryos.jsonc"
+
     install -Dm644 LICENSE \
         "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
 }
