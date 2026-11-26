@@ -1,7 +1,7 @@
 # Maintainer: smtdfc <me.smtdfc@gmail.com>
 
 pkgname=bakeryos-shell-config
-pkgver=1.2.0
+pkgver=1.3.0
 pkgrel=1
 pkgdesc="Default shell environment for BakeryOS"
 arch=('any')
@@ -12,7 +12,7 @@ source=(
   "${pkgname}-${pkgver}.tar.gz::https://github.com/bakeryos-project/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz"
 )
 
-sha256sums=('71e732582c4857e358f54fede9283be0a5ff113c5c372f12b6d7c5d75a29c7d9')
+sha256sums=('7ead2a95d7c1811f43146754bbc5994546836db7eb5902ea26276c2ee18fd8f6')
 options=(!debug !strip)
 
 package() {
