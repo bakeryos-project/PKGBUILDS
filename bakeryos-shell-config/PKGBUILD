@@ -19,6 +19,7 @@ package() {
     cd "$srcdir/${pkgname}-${pkgver}"
 
     install -d "$pkgdir/etc/skel"
+    install -d "$pkgdir/etc/skel/.config"
     cp -a skel/. "$pkgdir/etc/skel/"
 
     rm -f "$pkgdir/etc/skel/.bashrc"
